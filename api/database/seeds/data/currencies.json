@@ -1,0 +1,47 @@
+{
+    "USD": {
+        "symbol": "$",
+        "name": "US Dollar",
+        "symbol_native": "$",
+        "code": "USD",
+        "name_plural": "US dollars",
+        "exchange_rate": 0.909025,
+        "is_default": false
+    },
+    "CAD": {
+        "symbol": "CA$",
+        "name": "Canadian Dollar",
+        "symbol_native": "$",
+        "code": "CAD",
+        "name_plural": "Canadian dollars",
+        "exchange_rate": 0.689977,
+        "is_default": false
+    },
+    "EUR": {
+        "symbol": "€",
+        "name": "Euro",
+        "symbol_native": "€",
+        "code": "EUR",
+        "name_plural": "euros",
+        "exchange_rate": 1.000000,
+        "is_default": true
+    },
+    "CHF": {
+        "symbol": "Fr",
+        "name": "Swiss Franc",
+        "symbol_native": "CHF",
+        "code": "CHF",
+        "name_plural": "Swiss francs",
+        "exchange_rate": 0.932038,
+        "is_default": false
+    },
+    "GBP": {
+        "symbol": "£",
+        "name": "British Pound Sterling",
+        "symbol_native": "£",
+        "code": "GBP",
+        "name_plural": "British pounds sterling",
+        "exchange_rate": 1.18286,
+        "is_default": false
+    }
+}

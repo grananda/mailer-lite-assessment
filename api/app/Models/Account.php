@@ -26,4 +26,9 @@ class Account extends Model
     {
         return $this->hasMany(Transaction::class, 'owner_id', 'id');
     }
+
+    public function currency()
+    {
+        return $this->hasOne(Currency::class);
+    }
 }
