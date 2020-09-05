@@ -11,7 +11,7 @@ class Transaction extends Model
     use HasUuid;
 
     protected $fillable = [
-        'amount'
+        'amount',
     ];
 
     /**

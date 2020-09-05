@@ -22,7 +22,7 @@ class CreateAccountsTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('transactions', function(Blueprint $table) {
+        Schema::table('transactions', function (Blueprint $table) {
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

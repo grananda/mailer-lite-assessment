@@ -17,21 +17,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('api')->group(function() {
+Route::prefix('api')->group(function () {
     Route::get('accounts/{id}', function ($id) {
-        $account = DB::table('accounts')
-            ->whereRaw("id=$id")
-            ->get();
-
-        return $account;
+        return DB::table('accounts')
+            ->whereRaw("id=${id}")
+            ->get()
+        ;
     });
 
     Route::get('accounts/{id}/transactions', function ($id) {
-        $account = DB::table('transactions')
-            ->whereRaw("`from`=$id OR `to`=$id")
-            ->get();
-
-        return $account;
+        return DB::table('transactions')
+            ->whereRaw("`from`=${id} OR `to`=${id}")
+            ->get()
+        ;
     });
 
     Route::post('accounts/{id}/transactions', function (Request $request, $id) {
@@ -40,27 +38,28 @@ Route::prefix('api')->group(function() {
         $details = $request->input('details');
 
         $account = DB::table('accounts')
-            ->whereRaw("id=$id")
-            ->update(['balance' => DB::raw('balance-' . $amount)]);
+            ->whereRaw("id=${id}")
+            ->update(['balance' => DB::raw('balance-'.$amount)])
+        ;
 
         $account = DB::table('accounts')
-            ->whereRaw("id=$to")
-            ->update(['balance' => DB::raw('balance+' . $amount)]);
+            ->whereRaw("id=${to}")
+            ->update(['balance' => DB::raw('balance+'.$amount)])
+        ;
 
         DB::table('transactions')->insert(
             [
-                'from' => $id,
-                'to' => $to,
-                'amount' => $amount,
-                'details' => $details
+                'from'    => $id,
+                'to'      => $to,
+                'amount'  => $amount,
+                'details' => $details,
             ]
         );
     });
 
     Route::get('currencies', function () {
-        $account = DB::table('currencies')
-            ->get();
-
-        return $account;
+        return DB::table('currencies')
+            ->get()
+        ;
     });
 });
