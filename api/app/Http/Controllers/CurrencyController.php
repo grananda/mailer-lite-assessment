@@ -2,17 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Currency;
+use App\Repositories\CurrencyRepository;
+use Exception;
+use Illuminate\Http\JsonResponse;
+
 class CurrencyController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var  CurrencyRepository
+     */
+    private $currencyRepository;
+
+    /**
+     * @param CurrencyRepository $currencyRepository
+     */
+    public function __construct(CurrencyRepository $currencyRepository)
+    {
+        $this->currencyRepository = $currencyRepository;
+    }
+
+    /**
+     * @return JsonResponse
      */
     public function index()
     {
-        return DB::table('currencies')
-            ->get()
-            ;
+        try {
+            $currencies = $this->currencyRepository->findAll();
+
+            return $this->responseOk(Currency::collection($currencies));
+        } catch (Exception $exception) {
+            return $this->responseInternalError($exception->getMessage());
+        }
     }
 }
