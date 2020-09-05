@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Throwable;
 
@@ -23,6 +24,18 @@ abstract class BaseRepository
     public function __construct(Model $model)
     {
         $this->model = $model;
+    }
+
+    /**
+     * Find all records for a give domain.
+     *
+     * @return Collection
+     */
+    public function findAll()
+    {
+        $query = $this->getQuery();
+
+        return $query->get();
     }
 
     /**

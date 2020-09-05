@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('accounts/{id}', 'AccountController@index')->name('api.account.index');
+Route::get('accounts', 'AccountController@index')->name('api.account.index');
+Route::get('accounts/{id}', 'AccountController@show')->name('api.account.show');
 
 Route::get('accounts/{id}/transactions', 'TransactionController@index')->name('api.transaction.index');
 
