@@ -14,7 +14,7 @@ class ListTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function a_list_of_accounts_is_returned()
+    public function a_list_of_accounts_is_returned_with_200_code()
     {
         // Given
         factory(Account::class, 5)->create();
