@@ -15,10 +15,17 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('from')->unsigned();
-            $table->bigInteger('to')->unsigned();
+            $table->uuid('uuid')->unique();
+            $table->foreignId('account_from_id');
+            $table->foreignId('account_to_id');
             $table->text('details');
             $table->float('amount');
+            $table->timestamps();
+        });
+
+        Schema::table('transactions', function(Blueprint $table) {
+            $table->foreign('account_from_id')->references('id')->on('accounts')->onDelete('cascade');
+            $table->foreign('account_to_id')->references('id')->on('accounts')->onDelete('cascade');
         });
     }
 

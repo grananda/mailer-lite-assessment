@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Seeder;
+use App\Models\Account;
+use App\Models\User;
 
-class AccountsTableSeeder extends Seeder
+class AccountsTableSeeder extends AbstractSeeder
 {
     /**
      * Run the database seeds.
@@ -11,14 +12,14 @@ class AccountsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('accounts')->insert([
-            'name' => 'John',
-            'balance' => 15000
-        ]);
+        $users = User::all();
 
-        DB::table('accounts')->insert([
-            'name' => 'Peter',
-            'balance' => 100000
-        ]);
+        $users->each(function ($user) {
+            factory(Account::class)->create(
+                [
+                    'owner_id' => $user->id,
+                ]
+            );
+        });
     }
 }
