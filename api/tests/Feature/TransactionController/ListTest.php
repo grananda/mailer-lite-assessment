@@ -41,17 +41,17 @@ class ListTest extends TestCase
 
         /** @var Transaction $transaction3 */
         $transaction3 = factory(Transaction::class)->create([
-            'account_from_id' => $account2->id,
-            'account_to_id'   => $account3->id,
+            'account_from_id' => $account3->id,
+            'account_to_id'   => $account2->id,
         ]);
 
         // When
-        $response = $this->api()->get(route('api.transaction.index', $account1->uuid));
+        $response = $this->api()->get(route('api.transaction.index', $account1->account_number));
 
         // Then
         $response->assertOk();
-        $response->assertJsonFragment(['id' => $transaction1->uuid]);
-        $response->assertJsonFragment(['id' => $transaction2->uuid]);
-        $response->assertJsonMissing(['id' => $transaction3->uuid]);
+        $response->assertJsonFragment(['account_from' => $account1->account_number]);
+        $response->assertJsonFragment(['account_from' => $account2->account_number]);
+        $response->assertJsonMissing(['account_from' => $account3->account_number]);
     }
 }

@@ -16,7 +16,7 @@ class AccountShowRequest extends Request
      */
     public function authorize()
     {
-        $this->account = Account::findByUuidOrFail($this->route('id'));
+        $this->account = Account::where('account_number',$this->route('id'))->firstOrFail();
 
         return true;
     }

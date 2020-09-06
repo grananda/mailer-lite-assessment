@@ -17,8 +17,8 @@ class CreateAccountsTable extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->string('account_number');
-            $table->foreignId('owner_id');
-            $table->foreignId('currency_id');
+            $table->foreignId('owner_id')->nullable();
+            $table->foreignId('currency_id')->nullable();
             $table->float('balance');
             $table->timestamps();
         });

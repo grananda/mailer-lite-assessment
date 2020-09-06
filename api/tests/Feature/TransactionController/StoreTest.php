@@ -51,8 +51,8 @@ class StoreTest extends TestCase
 
         // Then
         $response->assertOk();
-        $response->assertJsonFragment(['account_number' => $account1->account_number]);
-        $response->assertJsonFragment(['account_number' => $account2->account_number]);
+        $response->assertJsonFragment(['account_from' => $account1->account_number]);
+        $response->assertJsonFragment(['account_to' => $account2->account_number]);
     }
 
     /** @test */

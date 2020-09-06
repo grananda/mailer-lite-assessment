@@ -14,7 +14,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CurrenciesTableSeeder::class);
 
         if (! app()->environment('testing')) {
-            $this->call(UserTableSeeder::class);
             $this->call(AccountsTableSeeder::class);
             $this->call(TransactionsTableSeeder::class);
         }
