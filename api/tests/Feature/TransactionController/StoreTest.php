@@ -11,7 +11,7 @@ use Tests\TestCase;
 /**
  * @covers \App\Http\Controllers\TransactionController::store
  */
-class StoreController extends TestCase
+class StoreTest extends TestCase
 {
     use RefreshDatabase;
 
