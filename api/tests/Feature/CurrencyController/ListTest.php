@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
- * @coversNothing
+ * @covers \App\Http\Controllers\CurrencyController::index
  */
 class ListTest extends TestCase
 {
@@ -17,10 +17,10 @@ class ListTest extends TestCase
     public function a_list_of_currencies_is_displayed_with_200_code()
     {
         // When
-        $response = $this->get(route('api.currency.index'));
-        $data     = json_decode($response->content())->data;
+        $response = $this->api()->get(route('api.currency.index'));
 
         // Then
-        $this->assertCount(Currency::count(), $data);
+        $response->assertOk();
+        $response->assertJsonCount(Currency::count());
     }
 }

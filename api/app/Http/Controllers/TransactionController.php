@@ -2,53 +2,70 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\TransactionsListRequest;
+use App\Http\Requests\TransactionsStoreRequest;
+use App\Http\Resources\Transaction;
+use App\Repositories\TransactionRepository;
+use App\Services\TransactionService;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Throwable;
 
 class TransactionController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var TransactionRepository
      */
-    public function index()
+    private $transactionRepository;
+
+    /**
+     * @var TransactionService
+     */
+    private $transactionService;
+
+    /**
+     * TransactionController constructor.
+     *
+     * @param TransactionRepository $transactionRepository
+     * @param TransactionService    $transactionService
+     */
+    public function __construct(TransactionRepository $transactionRepository, TransactionService $transactionService)
     {
-        return DB::table('transactions')
-            ->whereRaw("`from`=${id} OR `to`=${id}")
-            ->get()
-            ;
+        $this->transactionRepository = $transactionRepository;
+        $this->transactionService    = $transactionService;
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param TransactionsListRequest $request
      *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function index(TransactionsListRequest $request)
     {
-        $to      = $request->input('to');
-        $amount  = $request->input('amount');
-        $details = $request->input('details');
+        try {
+            $transactions = $this->transactionRepository->findAllAccountRelatedTransactions($request->account);
 
-        $account = DB::table('accounts')
-            ->whereRaw("id=${id}")
-            ->update(['balance' => DB::raw('balance-'.$amount)])
-        ;
+            return $this->responseOk(Transaction::collection($transactions));
+        } catch (Exception $exception) {
+            return $this->responseInternalError($exception->getMessage());
+        }
+    }
 
-        $account = DB::table('accounts')
-            ->whereRaw("id=${to}")
-            ->update(['balance' => DB::raw('balance+'.$amount)])
-        ;
+    /**
+     * @param TransactionsStoreRequest $request
+     *
+     * @throws Throwable
+     *
+     * @return JsonResponse
+     */
+    public function store(TransactionsStoreRequest $request)
+    {
+        try {
+            $transaction = $this->transactionService->processTransaction($request->accountFrom, $request->accountTo, $request->amount, $request->details);
 
-        DB::table('transactions')->insert(
-            [
-                'from'    => $id,
-                'to'      => $to,
-                'amount'  => $amount,
-                'details' => $details,
-            ]
-        );
+            return $this->responseOk(Transaction::make($transaction));
+        } catch (Exception $exception) {
+            return $this->responseInternalError($exception->getMessage());
+        }
     }
 }

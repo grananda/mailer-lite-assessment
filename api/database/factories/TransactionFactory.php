@@ -11,5 +11,6 @@ $factory->define(Transaction::class, function (Faker $faker) {
         'account_to_id'   => null,
         'details'         => $faker->text,
         'amount'          => $faker->randomFloat(2, 1, 100),
+        'status'          => true,
     ];
 });

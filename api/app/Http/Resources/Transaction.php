@@ -17,9 +17,10 @@ class Transaction extends JsonResource
     {
         return [
             'id'             => $this->uuid,
-            'owner_account'  => Account::make($this->owner_account),
-            'target_account' => Account::make($this->target_account),
+            'owner_account'  => Account::make($this->ownerAccount),
+            'target_account' => Account::make($this->targetAccount),
             'amount'         => $this->amount,
+            'status'         => $this->status,
             'created_at'     => $this->created_at,
         ];
     }

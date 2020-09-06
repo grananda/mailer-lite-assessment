@@ -28,6 +28,16 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * @return TestCase
+     */
+    public function api()
+    {
+        return $this->withHeaders([
+            'Accept' => 'application/json',
+        ]);
+    }
+
+    /**
      * @throws Throwable
      */
     public function tearDown(): void

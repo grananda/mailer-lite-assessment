@@ -23,7 +23,7 @@ class Controller extends BaseController
      */
     public function responseOk($data, array $headers = [])
     {
-        return response()->json(compact('data'), HttpResponse::HTTP_OK, $headers, JSON_PRETTY_PRINT);
+        return response()->json($data, HttpResponse::HTTP_OK, $headers, JSON_PRETTY_PRINT);
     }
 
     /**
@@ -33,7 +33,7 @@ class Controller extends BaseController
      */
     public function responseCreated($data)
     {
-        return response()->json(compact('data'), HttpResponse::HTTP_CREATED);
+        return response()->json($data, HttpResponse::HTTP_CREATED);
     }
 
     /**

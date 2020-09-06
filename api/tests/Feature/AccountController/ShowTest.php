@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
- * @coversNothing
+ * @covers \App\Http\Controllers\AccountController::show
  */
 class ShowTest extends TestCase
 {
@@ -21,11 +21,10 @@ class ShowTest extends TestCase
         $account = factory(Account::class)->create();
 
         // When
-        $response = $this->get(route('api.account.show', $account->uuid));
-        $data     = json_decode($response->content())->data;
+        $response = $this->api()->get(route('api.account.show', $account->uuid));
+
         // Then
         $response->assertOk();
-
-        $this->assertEquals($account->uuid, $data->id);
+        $response->assertJsonFragment(['id' => $account->uuid]);
     }
 }

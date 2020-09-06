@@ -12,12 +12,18 @@ class Transaction extends Model
 
     protected $fillable = [
         'amount',
+        'status',
+        'details',
+    ];
+
+    protected $casts = [
+        'status' => 'boolean',
     ];
 
     /**
      * @return BelongsToAlias
      */
-    protected function ownerAccount()
+    public function ownerAccount()
     {
         return $this->belongsTo(Account::class, 'account_from_id', 'id');
     }
@@ -25,7 +31,7 @@ class Transaction extends Model
     /**
      * @return BelongsToAlias
      */
-    protected function targetAccount()
+    public function targetAccount()
     {
         return $this->belongsTo(Account::class, 'account_to_id', 'id');
     }

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
- * @coversNothing
+ * @covers \App\Http\Controllers\AccountController::index
  */
 class ListTest extends TestCase
 {
@@ -20,11 +20,10 @@ class ListTest extends TestCase
         factory(Account::class, 5)->create();
 
         // When
-        $response = $this->get(route('api.account.index'));
-        $data     = json_decode($response->content())->data;
+        $response = $this->api()->get(route('api.account.index'));
+
         // Then
         $response->assertOk();
-
-        $this->assertCount(5, $data);
+        $response->assertJsonCount(5);
     }
 }

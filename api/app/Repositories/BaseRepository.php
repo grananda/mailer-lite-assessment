@@ -68,6 +68,23 @@ abstract class BaseRepository
     }
 
     /**
+     * @param Model $entity
+     * @param array $attributes
+     *
+     * @throws Throwable
+     *
+     * @return Model
+     */
+    public function update(Model $entity, array $attributes)
+    {
+        $entity->fill($attributes);
+
+        $entity->save();
+
+        return $entity->fresh();
+    }
+
+    /**
      * Gets current model.
      *
      * @param array $attributes

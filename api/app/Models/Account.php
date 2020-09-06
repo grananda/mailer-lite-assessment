@@ -7,9 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo as BelongsToAlias;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int      id
+ * @property float    balance
+ * @property string   account_number
+ * @property Currency currency
+ */
 class Account extends Model
 {
     use HasUuid;
+
+    protected $fillable = [
+        'balance',
+    ];
 
     /**
      * @return BelongsToAlias
