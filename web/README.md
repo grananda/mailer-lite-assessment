@@ -8,7 +8,7 @@ To initiate the development environment follow the steps above after cloning the
 	- `composer install` : this will install all necessary dependencies for the API to run.
 	- `php artisan key:generate` : this is an optional step in case you wish to change the `.env` file key.
 	- `touch ./database/database.sqlite` : this command will initiate your database file.
-	- `composer db:reset` : reset: this will initiate your local SQLite database with dummy data.
+	- `composer db:reset` : this will initiate your local SQLite database with dummy data.
 	- `composer server:start` : this command will start your server at port 8000
 	- `phpunit`: to run all the tests.
 - For the front end, switch to th `web` folder and follow the steps below:
