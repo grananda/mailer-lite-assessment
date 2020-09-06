@@ -20,6 +20,7 @@ class Transaction extends JsonResource
             'account_to'   => $this->targetAccount->account_number,
             'amount'       => $this->ownerAccount->currency->symbol.number_format($this->amount, 2),
             'status'       => $this->status ? 'Completed' : 'Failed',
+            'details'      => $this->details,
             'date'         => $this->created_at->format('Y/m/d H:s'),
         ];
     }
