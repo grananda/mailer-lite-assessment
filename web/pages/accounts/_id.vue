@@ -3,22 +3,22 @@
     <div class="container" v-if="loading">loading...</div>
 
     <div class="container" v-if="!loading">
-      <b-card :header="'Welcome, ' + account.name" class="mt-3">
+      <b-card :header="'Welcome, ' + account.owner.name" class="mt-3">
         <b-card-text>
           <div>
-            Account: <code>{{ account.id }}</code>
+            Account Number: <code>{{ account.account_number }}</code>
           </div>
           <div>
             Balance:
-            <code
-              >{{ account.currency === "usd" ? "$" : "€"
-              }}{{ account.balance }}</code
-            >
+            <code>
+              {{ account.balance }}
+            </code>
           </div>
         </b-card-text>
-        <b-button size="sm" variant="success" @click="show = !show"
-          >New payment</b-button
-        >
+
+        <b-button size="sm" variant="success" @click="show = !show">
+          New payment
+        </b-button>
 
         <b-button
           class="float-right"
@@ -26,18 +26,21 @@
           size="sm"
           nuxt-link
           to="/"
-          >Logout</b-button
+        >Logout
+        </b-button
         >
       </b-card>
 
+      <b-alert class="mt-3" variant="danger" :show="displayErrorMessage">{{ message }}</b-alert>
+
       <b-card class="mt-3" header="New Payment" v-show="show">
-        <b-form @submit="onSubmit">
+        <b-form>
           <b-form-group id="input-group-1" label="To:" label-for="input-1">
             <b-form-input
               id="input-1"
               size="sm"
-              v-model="payment.to"
-              type="number"
+              v-model="payment.target_account"
+              type="string"
               required
               placeholder="Destination ID"
             ></b-form-input>
@@ -65,7 +68,7 @@
             ></b-form-input>
           </b-form-group>
 
-          <b-button type="submit" size="sm" variant="primary">Submit</b-button>
+          <b-button @click="transferAmount" size="sm" variant="primary">Submit</b-button>
         </b-form>
       </b-card>
 
@@ -80,121 +83,111 @@
 import axios from "axios";
 import Vue from "vue";
 
-export default {
+interface User {
+  name: string;
+  email: string;
+}
+
+interface Account {
+  id: number,
+  account_number: number;
+  balance: number;
+  owner: User;
+  currency: Currency;
+}
+
+interface Currency {
+  symbol: string;
+  code: string;
+}
+
+interface Transaction {
+  amount: number;
+  currency: string;
+  details: string;
+  account_from: Account;
+  account_to: Account;
+}
+
+interface Payment {
+  amount: number,
+  account_from: string,
+  target_account: string,
+}
+
+export default Vue.extend({
+
   data() {
     return {
       show: false,
-      payment: {},
-
-      account: null,
-      transactions: null,
-
-      loading: true
+      loading: true,
+      message: null,
+      displayErrorMessage: false,
+      payment: {} as Payment,
+      account: {} as Account,
+      transactions: [] as Transaction[],
     };
   },
 
-  mounted() {
-    const that = this;
+  async mounted() {
+    await this.catchAccountData();
+    await this.catchAccountTransactionsData();
+  },
 
-    axios
-      .get(`http://localhost:8000/api/accounts/${this.$route.params.id}`)
-      .then(function(response) {
-        if (!response.data.length) {
-          window.location = "/";
-        } else {
-          that.account = response.data[0];
+  methods: {
+    async catchAccountData() {
+      let that = this;
+
+      await axios
+        .get(`http://localhost:8000/api/accounts/${this.$route.params.id}`)
+        .then((response) => {
+          that.account = response.data;
 
           if (that.account && that.transactions) {
             that.loading = false;
           }
-        }
-      });
+        })
+        .catch((err) => {
+          that.$router.push('/')
+        });
+    },
+    async catchAccountTransactionsData() {
+      let that = this;
 
-    axios
-      .get(
-        `http://localhost:8000/api/accounts/${
-          that.$route.params.id
-        }/transactions`
-      )
-      .then(function(response) {
-        that["transactions"] = response.data;
+      await axios
+        .get(`http://localhost:8000/api/accounts/${that.account.id}/transactions`)
+        .then((response) => {
+          that.transactions = response.data;
 
-        var transactions = [];
-        for (let i = 0; i < that.transactions.length; i++) {
-          that.transactions[i].amount =
-            (that.account.currency === "usd" ? "$" : "€") +
-            that.transactions[i].amount;
-
-          if (that.account.id != that.transactions[i].to) {
-            that.transactions[i].amount = "-" + that.transactions[i].amount;
+          if (that.account && that.transactions) {
+            that.loading = false;
           }
+        });
+    },
+    async transferAmount() {
+      let that = this;
 
-          transactions.push(that.transactions[i]);
-        }
-
-        that.transactions = transactions;
-
-        if (that.account && that.transactions) {
-          that.loading = false;
-        }
-      });
-  },
-
-  methods: {
-    onSubmit(evt) {
-      var that = this;
-
-      evt.preventDefault();
-
-      axios.post(
-        `http://localhost:8000/api/accounts/${
-          this.$route.params.id
-        }/transactions`,
-
+      await axios.post(
+        `http://localhost:8000/api/accounts/${that.account.id}/transactions`,
         this.payment
-      );
+      )
+        .then((response) => {
+          this.catchAccountData();
+          this.catchAccountTransactionsData();
+        })
+        .catch((err) => {
+          that.message = err.response.data.message;
+          that.displayErrorMessage = true;
+          setTimeout(() => {
+            that.displayErrorMessage = false;
+          }, 5000);
 
-      that.payment = {};
-      that.show = false;
-
-      // update items
-      setTimeout(() => {
-        axios
-          .get(`http://localhost:8000/api/accounts/${this.$route.params.id}`)
-          .then(function(response) {
-            if (!response.data.length) {
-              window.location = "/";
-            } else {
-              that.account = response.data[0];
-            }
-          });
-
-        axios
-          .get(
-            `http://localhost:8000/api/accounts/${
-              that.$route.params.id
-            }/transactions`
-          )
-          .then(function(response) {
-            that["transactions"] = response.data;
-
-            var transactions = [];
-            for (let i = 0; i < that.transactions.length; i++) {
-              that.transactions[i].amount =
-                (that.account.currency === "usd" ? "$" : "€") +
-                that.transactions[i].amount;
-
-              if (that.account.id != that.transactions[i].to) {
-                that.transactions[i].amount = "-" + that.transactions[i].amount;
-              }
-
-              transactions.push(that.transactions[i]);
-            }
-
-            that.transactions = transactions;
-          });
-      }, 200);
+        })
+        .finally(() => {
+          that.payment = {} as Payment;
+          that.show = false;
+        });
     }
   }
-};
+});
 </script>
