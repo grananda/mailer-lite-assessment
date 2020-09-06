@@ -63,6 +63,7 @@
         ],
         "cs:check": "./vendor/bin/php-cs-fixer fix --verbose --ansi --show-progress=estimating --diff --dry-run --config .php_cs.php",
         "cs:fix": "./vendor/bin/php-cs-fixer fix --verbose --ansi --show-progress=estimating --config .php_cs.php",
-        "db:reset": "php artisan migrate:fresh --seed && php artisan cache:clear"
+        "db:reset": "php artisan migrate:fresh --seed && php artisan cache:clear",
+        "server:start" : "php artisan serve"
     }
 }
