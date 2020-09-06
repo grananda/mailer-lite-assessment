@@ -35,9 +35,6 @@ import Vue, {PropOptions} from "vue";
 import {Account} from "~/types/Account";
 
 export default Vue.extend({
-  model: {
-    event: 'change',
-  },
   name: "AccountDetails",
   props: {
     show: {
@@ -56,7 +53,3 @@ export default Vue.extend({
   }
 });
 </script>
-
-<style scoped>
-
-</style>
