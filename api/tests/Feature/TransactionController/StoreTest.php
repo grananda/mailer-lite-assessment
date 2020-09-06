@@ -159,4 +159,33 @@ class StoreTest extends TestCase
         // Then
         $response->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
     }
+
+    /** @test */
+    public function a_transaction_is_canceled_when_both_accounts_are_the_same_with_500_code()
+    {
+        // Given
+        /** @var Currency $currency */
+        $currency = Currency::where('is_default', true)->first();
+
+        $initialAccount1Balance = 100;
+
+        /** @var Account $account1 */
+        $account1 = factory(Account::class)->create([
+            'balance'     => $initialAccount1Balance,
+            'currency_id' => $currency->id,
+        ]);
+
+        $transactionAmount = 50;
+
+        // When
+
+        $response = $this->api()->post(route('api.transaction.store', $account1->uuid), [
+            'target_account' => $account1->account_number,
+            'details'        => $this->faker->text,
+            'amount'         => $transactionAmount,
+        ]);
+
+        // Then
+        $response->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
 }

@@ -41,4 +41,14 @@ class Account extends Model
     {
         return $this->belongsTo(Currency::class);
     }
+
+    /**
+     * @param Account $account
+     *
+     * @return bool
+     */
+    public function equals(self $account)
+    {
+        return $this->uuid === $account->uuid;
+    }
 }

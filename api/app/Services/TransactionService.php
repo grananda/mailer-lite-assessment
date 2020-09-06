@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\InsufficientFundsException;
+use App\Exceptions\SameAccountTransactionForbiddenException;
 use App\Exceptions\TransactionExecutionException;
 use App\Models\Account;
 use App\Models\Transaction;
@@ -47,18 +48,22 @@ class TransactionService
      * @param                     $amount
      * @param                     $details
      *
-     * @throws InsufficientFundsException
      * @throws TransactionExecutionException
      * @throws Throwable
+     * @throws InsufficientFundsException
      *
      * @return void|Transaction
      */
     public function processTransaction(Account $accountFrom, Account $accountTo, $amount, $details)
     {
+        if ($accountFrom->equals($accountTo)) {
+            throw new SameAccountTransactionForbiddenException('Cannot transfer money to same account');
+        }
+
         if ($accountFrom->balance < $amount) {
             $transaction = $this->transactionRepository->createTransaction($accountFrom, $accountTo, $amount, $details, false);
 
-            throw new InsufficientFundsException("Insufficient funds to complete requested transaction: {$transaction->uuid}}");
+            throw new InsufficientFundsException("Insufficient funds to complete requested transaction: {$transaction->uuid}");
         }
 
         try {

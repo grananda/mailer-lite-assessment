@@ -46,7 +46,7 @@ class ListTest extends TestCase
         ]);
 
         // When
-        $response = $this->api()->get(route('api.transaction.index', $account1->account_number));
+        $response = $this->api()->get(route('api.transaction.index', $account1->uuid));
 
         // Then
         $response->assertOk();
