@@ -10,6 +10,7 @@ To initiate the development environment follow the steps above after cloning the
 	- `touch ./database/database.sqlite` : this command will initiate your database file.
 	- `composer db` : reset: this will initiate your local SQLite database with dummy data.
 	- `composer server:start` : this command will start your server at port 8000
+	- `phpunit`: to run all the tests.
 - For the front end, switch to th `web` folder and follow the steps below:
 	- `yarn install` : this command will install the necessary dependencies for the application to run.
 	- `yarn dev` : this commad will start the front end application in development mode.
