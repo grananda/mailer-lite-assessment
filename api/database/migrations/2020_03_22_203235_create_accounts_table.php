@@ -15,8 +15,17 @@ class CreateAccountsTable extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
-            $table->text('name');
+            $table->uuid('uuid')->unique();
+            $table->string('account_number');
+            $table->foreignId('owner_id')->nullable();
+            $table->foreignId('currency_id')->nullable();
             $table->float('balance');
+            $table->timestamps();
+        });
+
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('cascade');
         });
     }
 

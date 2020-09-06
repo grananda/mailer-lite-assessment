@@ -9,7 +9,7 @@
         >
           <b-form-input
             id="input"
-            type="number"
+            type="string"
             v-model="accountID"
             required
             placeholder="Account ID"
@@ -30,7 +30,7 @@ import Vue from "vue";
 export default Vue.extend({
   data() {
     return {
-      accountID: 1
+      accountID: 1182957782
     };
   },
   components: {}

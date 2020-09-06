@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
+use App\Models\Account;
 
-class AccountsTableSeeder extends Seeder
+class AccountsTableSeeder extends AbstractSeeder
 {
     /**
      * Run the database seeds.
@@ -11,14 +11,12 @@ class AccountsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('accounts')->insert([
-            'name' => 'John',
-            'balance' => 15000
-        ]);
+        $accounts = $this->getSeedFileContents('accounts');
 
-        DB::table('accounts')->insert([
-            'name' => 'Peter',
-            'balance' => 100000
-        ]);
+        foreach ($accounts as $account) {
+            factory(Account::class)->create([
+                'account_number' => $account['account_number'],
+            ]);
+        }
     }
 }
