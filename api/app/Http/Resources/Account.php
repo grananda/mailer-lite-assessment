@@ -20,7 +20,7 @@ class Account extends JsonResource
             'account_number' => $this->account_number,
             'owner'          => User::make($this->owner),
             'currency'       => Currency::make($this->currency),
-            'balance'        => $this->account_number,
+            'balance'        => $this->currency->symbol.number_format($this->balance, 2),
         ];
     }
 }

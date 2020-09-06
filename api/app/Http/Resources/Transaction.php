@@ -16,12 +16,12 @@ class Transaction extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'             => $this->uuid,
-            'owner_account'  => Account::make($this->ownerAccount),
-            'target_account' => Account::make($this->targetAccount),
-            'amount'         => $this->amount,
-            'status'         => $this->status,
-            'created_at'     => $this->created_at,
+            'account_from' => $this->ownerAccount->account_number,
+            'account_to'   => $this->targetAccount->account_number,
+            'amount'       => $this->ownerAccount->currency->symbol.number_format($this->amount, 2),
+            'status'       => $this->status ? 'Completed' : 'Failed',
+            'details'      => $this->details,
+            'date'         => $this->created_at->format('Y/m/d H:s'),
         ];
     }
 }

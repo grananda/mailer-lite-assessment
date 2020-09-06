@@ -9,7 +9,7 @@ $factory->define(Transaction::class, function (Faker $faker) {
     return [
         'account_from_id' => null,
         'account_to_id'   => null,
-        'details'         => $faker->text,
+        'details'         => $faker->sentence,
         'amount'          => $faker->randomFloat(2, 1, 100),
         'status'          => true,
     ];

@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Account;
-use App\Models\User;
 
 class AccountsTableSeeder extends AbstractSeeder
 {
@@ -12,14 +11,12 @@ class AccountsTableSeeder extends AbstractSeeder
      */
     public function run()
     {
-        $users = User::all();
+        $accounts = $this->getSeedFileContents('accounts');
 
-        $users->each(function ($user) {
-            factory(Account::class)->create(
-                [
-                    'owner_id' => $user->id,
-                ]
-            );
-        });
+        foreach ($accounts as $account) {
+            factory(Account::class)->create([
+                'account_number' => $account['account_number'],
+            ]);
+        }
     }
 }

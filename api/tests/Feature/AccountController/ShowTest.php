@@ -21,7 +21,7 @@ class ShowTest extends TestCase
         $account = factory(Account::class)->create();
 
         // When
-        $response = $this->api()->get(route('api.account.show', $account->uuid));
+        $response = $this->api()->get(route('api.account.show', $account->account_number));
 
         // Then
         $response->assertOk();

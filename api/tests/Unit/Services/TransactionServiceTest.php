@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services;
 
 use App\Exceptions\InsufficientFundsException;
+use App\Exceptions\SameAccountTransactionForbiddenException;
 use App\Models\Account;
 use App\Models\Currency;
 use App\Services\TransactionService;
@@ -164,6 +165,38 @@ class TransactionServiceTest extends TestCase
             'account_from_id' => $account1->id,
             'account_to_id'   => $account2->id,
             'amount'          => $transactionAmount,
+        ]);
+    }
+
+    /** @test */
+    public function a_transaction_between_two_accounts_failed_because_they_are_the_same_account()
+    {
+        // Given
+        $this->expectException(SameAccountTransactionForbiddenException::class);
+
+        /** @var TransactionService $service */
+        $service = resolve(TransactionService::class);
+
+        /** @var Currency $currency */
+        $currency = Currency::where('is_default', true)->first();
+
+        $initialAccount1Balance = 100;
+
+        /** @var Account $account1 */
+        $account1 = factory(Account::class)->create([
+            'balance'     => $initialAccount1Balance,
+            'currency_id' => $currency->id,
+        ]);
+
+        $transactionAmount = 50;
+
+        // When
+        $service->processTransaction($account1, $account1, $transactionAmount, $this->faker->text);
+
+        // Then
+        $this->assertDatabaseHas('accounts', [
+            'id'      => $account1->id,
+            'balance' => $account1->balance,
         ]);
     }
 }

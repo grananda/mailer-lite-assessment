@@ -18,7 +18,7 @@ class CreateTransactionsTable extends Migration
             $table->uuid('uuid')->unique();
             $table->foreignId('account_from_id')->nullable();
             $table->foreignId('account_to_id')->nullable();
-            $table->text('details');
+            $table->text('details')->nullable();
             $table->float('amount');
             $table->boolean('status')->default(true);
             $table->timestamps();
